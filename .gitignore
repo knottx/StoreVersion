@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Swift Package Manager build output and local state
+/.build/
+/Packages/
+/.swiftpm/configuration/registries.json
+/.netrc
+
+# Libraries don't pin dependency versions for their clients.
+/Package.resolved
+
+# Xcode (opening Package.swift directly)
+/.swiftpm/xcode/package.xcworkspace/
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcresult
