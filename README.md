@@ -19,13 +19,13 @@ It queries Apple's public [iTunes lookup API](https://performance-partners.apple
 
 StoreVersion is distributed through Swift Package Manager.
 
-**Xcode:** File › Add Package Dependencies…, enter `https://github.com/knottx/StoreVersion.git`, and choose "Up to Next Major Version" from `1.0.0`.
+**Xcode:** File › Add Package Dependencies…, enter `https://github.com/knottx/StoreVersion.git`, and choose "Up to Next Major Version" from `2.0.0`.
 
 **Package.swift:**
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/knottx/StoreVersion.git", from: "1.0.0"),
+    .package(url: "https://github.com/knottx/StoreVersion.git", from: "2.0.0"),
 ],
 targets: [
     .target(
@@ -185,16 +185,16 @@ In tests, give the view model a fake `AppUpdateRepository`. To test the reposito
 
 Methods throw `StoreVersionError`, or `CancellationError` if the calling task is cancelled.
 
-| Case | Meaning | Typical handling |
-| --- | --- | --- |
-| `.invalidCountryCode(String)` | Country code isn't two ASCII letters. No request is made. | Programmer error; fix the input or pass `nil`. |
-| `.missingBundleIdentifier` | No bundle ID was given and `Bundle.main` has none. | Configuration error. |
-| `.missingInstalledVersion` | No installed version was given and `CFBundleShortVersionString` is missing. | Configuration error. |
-| `.invalidVersion(String)` | The installed or store version isn't numeric. | Treat as "can't check". |
-| `.network(URLError)` | Transport failure (offline, timeout, TLS). | Retry later; silently skip the prompt. |
-| `.httpStatus(Int)` | The App Store returned a non-2xx status. | Retry later. |
-| `.invalidResponse` | The response body isn't valid lookup JSON. | Treat as "can't check". |
-| `.appNotFound` | No app with this bundle ID in the requested store. | Check `countryCode`, or the app isn't released yet. |
+| Case                          | Meaning                                                                     | Typical handling                                    |
+| ----------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------- |
+| `.invalidCountryCode(String)` | Country code isn't two ASCII letters. No request is made.                   | Programmer error; fix the input or pass `nil`.      |
+| `.missingBundleIdentifier`    | No bundle ID was given and `Bundle.main` has none.                          | Configuration error.                                |
+| `.missingInstalledVersion`    | No installed version was given and `CFBundleShortVersionString` is missing. | Configuration error.                                |
+| `.invalidVersion(String)`     | The installed or store version isn't numeric.                               | Treat as "can't check".                             |
+| `.network(URLError)`          | Transport failure (offline, timeout, TLS).                                  | Retry later; silently skip the prompt.              |
+| `.httpStatus(Int)`            | The App Store returned a non-2xx status.                                    | Retry later.                                        |
+| `.invalidResponse`            | The response body isn't valid lookup JSON.                                  | Treat as "can't check".                             |
+| `.appNotFound`                | No app with this bundle ID in the requested store.                          | Check `countryCode`, or the app isn't released yet. |
 
 An update check should rarely block the user. Usually the right response to any error is to skip the prompt and try again on the next launch.
 
