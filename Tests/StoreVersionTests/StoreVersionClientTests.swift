@@ -79,7 +79,22 @@ struct StoreVersionClientTests {
         _ = try await client.lookup(countryCode: nil)
 
         let request = try #require(stub.requests.first)
-        #expect(request.queryNames == ["bundleId"])
+        #expect(request.queryValue("country") == nil)
+    }
+
+    @Test func requestsListingForCurrentPlatform() async throws {
+        let (client, stub) = makeClient(handler: respond(json: lookupJSON()))
+
+        _ = try await client.lookup()
+
+        let request = try #require(stub.requests.first)
+        #if os(tvOS)
+            // Without it, the lookup returns the iOS app's version.
+            #expect(request.queryNames == ["bundleId", "entity"])
+            #expect(request.queryValue("entity") == "tvSoftware")
+        #else
+            #expect(request.queryNames == ["bundleId"])
+        #endif
     }
 
     @Test(arguments: [("th", "th"), ("TH", "th"), (" jp\n", "jp"), ("Us", "us")])

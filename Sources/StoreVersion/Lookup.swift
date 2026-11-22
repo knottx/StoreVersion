@@ -13,9 +13,27 @@ import Foundation
 enum LookupRequest {
     static let endpoint = URL(string: "https://itunes.apple.com/lookup")!
 
-    static func make(bundleIdentifier: String, countryCode: String?) throws -> URLRequest {
+    /// The `entity` to request for the running platform.
+    ///
+    /// A bundle ID lookup without `entity` returns the iOS (or Mac) listing.
+    /// tvOS apps usually share their bundle ID with an iOS app but ship their
+    /// own version numbers, so tvOS must ask for the Apple TV listing.
+    static var platformEntity: String? {
+        #if os(tvOS)
+            "tvSoftware"
+        #else
+            nil
+        #endif
+    }
+
+    static func make(bundleIdentifier: String,
+                     countryCode: String?,
+                     entity: String? = Self.platformEntity) throws -> URLRequest {
         var components = URLComponents(url: self.endpoint, resolvingAgainstBaseURL: false)!
         var queryItems = [URLQueryItem(name: "bundleId", value: bundleIdentifier)]
+        if let entity {
+            queryItems.append(URLQueryItem(name: "entity", value: entity))
+        }
         if let countryCode {
             try queryItems.append(URLQueryItem(name: "country", value: self.normalize(countryCode: countryCode)))
         }

@@ -12,20 +12,20 @@ It queries Apple's public [iTunes lookup API](https://performance-partners.apple
 
 ## Requirements
 
-- iOS 15+ / macOS 12+
+- iOS 15+ / macOS 12+ / tvOS 15+
 - Swift 6.0+ (Xcode 16+)
 
 ## Installation
 
 StoreVersion is distributed through Swift Package Manager.
 
-**Xcode:** File › Add Package Dependencies…, enter `https://github.com/knottx/StoreVersion.git`, and choose "Up to Next Major Version" from `2.0.0`.
+**Xcode:** File › Add Package Dependencies…, enter `https://github.com/knottx/StoreVersion.git`, and choose "Up to Next Major Version" from `2.1.0`.
 
 **Package.swift:**
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/knottx/StoreVersion.git", from: "2.0.0"),
+    .package(url: "https://github.com/knottx/StoreVersion.git", from: "2.1.0"),
 ],
 targets: [
     .target(
@@ -72,6 +72,10 @@ listing.releaseDate       // Date?
 listing.minimumOSVersion  // String?, e.g. "15.0"
 listing.appID             // Int (trackId)
 ```
+
+### tvOS
+
+On tvOS, the lookup asks for the Apple TV listing (`entity=tvSoftware`). A tvOS app often shares its bundle identifier with an iOS app but has its own version numbers, so without this the client would compare against the iOS version. No setup is needed; `listing.storeURL` and `listing.minimumOSVersion` also describe the Apple TV app.
 
 ### Country code
 
